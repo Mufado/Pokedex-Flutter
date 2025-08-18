@@ -11,5 +11,10 @@ class Pokemon {
 }
 
 class PokemonData {
-  const PokemonData({required String name, required String url});
+  final String name;
+  final String url;
+
+  const PokemonData({required this.name, required this.url});
+
+  List<Object?> get props => [name, url];
 }
