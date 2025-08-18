@@ -4,7 +4,7 @@ part 'all_pokemons_dto.g.dart';
 
 @JsonSerializable()
 class AllPokemons {
-  List<PokemonName> results;
+  List<PokemonDataDTO> results;
 
   AllPokemons({required this.results});
 
@@ -13,11 +13,12 @@ class AllPokemons {
 }
 
 @JsonSerializable()
-class PokemonName {
+class PokemonDataDTO {
   String name;
+  String url;
 
-  PokemonName({required this.name});
+  PokemonDataDTO({required this.name, required this.url});
 
-  factory PokemonName.fromJson(Map<String, dynamic> json) =>
-      _$PokemonNameFromJson(json);
+  factory PokemonDataDTO.fromJson(Map<String, dynamic> json) =>
+      _$PokemonDataDTOFromJson(json);
 }

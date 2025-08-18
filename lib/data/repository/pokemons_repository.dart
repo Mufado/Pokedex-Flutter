@@ -1,0 +1,15 @@
+import 'package:pokedex_app/data/network/client/api_client.dart';
+import 'package:pokedex_app/data/network/dto/all_pokemons_dto.dart';
+
+class PokemonsRepository {
+  final ApiClient apiClient;
+
+  PokemonsRepository({required this.apiClient});
+
+  Future<List<PokemonDataDTO>> getAllPokemons({int? offset, int? limit}) async {
+    return (await apiClient.getAllPokemons(
+      offset: offset,
+      limit: limit,
+    )).results;
+  }
+}

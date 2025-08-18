@@ -11,7 +11,7 @@ class ApiClient {
 
   Future<AllPokemons> getAllPokemons({int? offset, int? limit}) async {
     final response = await _dio.get(
-      '/',
+      'pokemon',
       queryParameters: {'offset': offset, 'limit': limit},
     );
 

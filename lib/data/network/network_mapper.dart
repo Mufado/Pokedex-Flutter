@@ -1,6 +1,6 @@
 import 'package:pokedex_app/data/network/dto/pokemon_dto.dart';
 import 'package:pokedex_app/domain/exception/mapper_exeception.dart';
-import 'package:pokedex_app/domain/model/pokemon.dart';
+import 'package:pokedex_app/domain/entity/pokemon.dart';
 
 extension on PokemonDTO {
   Pokemon toEntity() {

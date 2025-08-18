@@ -9,3 +9,7 @@ class Pokemon {
     required List<String> types,
   });
 }
+
+class PokemonData {
+  const PokemonData({required String name, required String url});
+}
