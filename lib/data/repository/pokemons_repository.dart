@@ -13,4 +13,8 @@ class PokemonsRepository {
       limit: limit,
     )).results.toEntities();
   }
+
+  Future<Pokemon> getPokemonDetails(String pokemonUrl) async {
+    return (await apiClient.getPokemonDetails(url: pokemonUrl)).toEntity();
+  }
 }

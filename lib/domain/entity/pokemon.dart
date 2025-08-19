@@ -1,12 +1,20 @@
 class Pokemon {
+  final int id;
+  final String name;
+  final String spriteUrl;
+  final int height;
+  final int weight;
+  final List<String> abilities;
+  final List<String> types;
+
   const Pokemon({
-    required int id,
-    required String name,
-    required String sprite,
-    required int height,
-    required int weight,
-    required List<String> abilities,
-    required List<String> types,
+    required this.id,
+    required this.name,
+    required this.spriteUrl,
+    required this.height,
+    required this.weight,
+    required this.abilities,
+    required this.types,
   });
 }
 

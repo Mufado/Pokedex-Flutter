@@ -47,10 +47,10 @@ Map<String, dynamic> _$AbilityToJson(Ability instance) => <String, dynamic>{
 };
 
 PokemonSprites _$PokemonSpritesFromJson(Map<String, dynamic> json) =>
-    PokemonSprites(frontDefault: json['frontDefault'] as String);
+    PokemonSprites(frontDefault: json['front_default'] as String);
 
 Map<String, dynamic> _$PokemonSpritesToJson(PokemonSprites instance) =>
-    <String, dynamic>{'frontDefault': instance.frontDefault};
+    <String, dynamic>{'front_default': instance.frontDefault};
 
 PokemonType _$PokemonTypeFromJson(Map<String, dynamic> json) =>
     PokemonType(type: Type.fromJson(json['type'] as Map<String, dynamic>));

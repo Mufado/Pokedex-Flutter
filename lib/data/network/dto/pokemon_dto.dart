@@ -48,6 +48,7 @@ class Ability {
 
 @JsonSerializable()
 class PokemonSprites {
+  @JsonKey(name: 'front_default')
   String frontDefault;
 
   PokemonSprites({required this.frontDefault});

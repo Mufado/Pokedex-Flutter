@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:pokedex_app/application/pokemon_details_cubit.dart';
 import 'package:pokedex_app/data/repository/pokemons_repository.dart';
 import 'package:pokedex_app/domain/entity/pokemon.dart';
+import 'package:pokedex_app/presentation/pages/pokemon_details_page.dart';
 import 'package:pokedex_app/presentation/widget/pokemon_card.dart';
 
 class PokemonListPage extends StatefulWidget {
-  const PokemonListPage({super.key});
+  const PokemonListPage({super.key, required});
 
   @override
   State<PokemonListPage> createState() => _PokemonListPageState();
@@ -37,10 +39,24 @@ class _PokemonListPageState extends State<PokemonListPage> {
     super.dispose();
   }
 
+  void _onTapPokemon(PokemonData pokemonData) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => BlocProvider(
+          create: (_) => PokemonDetailsCubit(
+            repository: context.read<PokemonsRepository>(),
+          ),
+          child: PokemonDetailsPage(pokemonData: pokemonData),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Pokédex'), centerTitle: true),
+      appBar: AppBar(title: Text('Pokédex')),
       body: PagingListener(
         controller: _pagingController,
         builder: (context, state, fetchNextPage) =>
@@ -49,13 +65,11 @@ class _PokemonListPageState extends State<PokemonListPage> {
               fetchNextPage: fetchNextPage,
               builderDelegate: PagedChildBuilderDelegate<PokemonData>(
                 itemBuilder: (context, pokemonData, index) => Container(
-                  padding: EdgeInsets.only(
-                    left: 100,
-                    top: 8,
-                    right: 100,
-                    bottom: 8,
+                  padding: EdgeInsets.symmetric(horizontal: 100, vertical: 8),
+                  child: PokemonCard(
+                    pokemonData: pokemonData,
+                    onTap: () => _onTapPokemon(pokemonData),
                   ),
-                  child: PokemonCard(pokemonData: pokemonData),
                 ),
               ),
             ),

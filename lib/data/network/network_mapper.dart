@@ -9,7 +9,7 @@ extension PokemonDtoToEntity on PokemonDTO {
       return Pokemon(
         id: id,
         name: name,
-        sprite: sprites.frontDefault,
+        spriteUrl: sprites.frontDefault,
         height: height,
         weight: weight,
         abilities: abilities

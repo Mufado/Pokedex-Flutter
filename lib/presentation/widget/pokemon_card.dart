@@ -1,45 +1,18 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:pokedex_app/domain/entity/pokemon.dart';
+import 'package:pokedex_app/presentation/widget/pokemon_sprite.dart';
 
 class PokemonCard extends StatelessWidget {
   static const _size = 100.0;
 
   final PokemonData pokemonData;
+  final VoidCallback onTap;
 
-  const PokemonCard({super.key, required this.pokemonData});
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: Column(
-        children: [
-          Container(
-            padding: EdgeInsets.only(left: 8, top: 8, right: 8, bottom: 8),
-            child: SizedBox(
-              width: _size,
-              height: _size,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(5),
-                child: CachedNetworkImage(
-                  imageUrl: _getPokemonSpriteUrl(pokemonUrl: pokemonData.url),
-                ),
-              ),
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.only(left: 8, top: 8, right: 8, bottom: 8),
-            child: Center(
-              child: Text(
-                pokemonData.name,
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  const PokemonCard({
+    super.key,
+    required this.pokemonData,
+    required this.onTap,
+  });
 
   String _getPokemonSpriteUrl({required String pokemonUrl}) {
     const baseImageURL =
@@ -49,5 +22,42 @@ class PokemonCard extends StatelessWidget {
         pokemonUri.pathSegments[pokemonUri.pathSegments.length - 2];
 
     return '$baseImageURL/$pokemonId.png';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: InkWell(
+        onTap: onTap,
+        child: Column(
+          children: [
+            Container(
+              padding: EdgeInsets.all(8),
+              child: SizedBox(
+                width: _size,
+                height: _size,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(5),
+                  child: PokemonSprite(
+                    spriteUrl: _getPokemonSpriteUrl(
+                      pokemonUrl: pokemonData.url,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.all(8),
+              child: Center(
+                child: Text(
+                  pokemonData.name.toUpperCase(),
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
