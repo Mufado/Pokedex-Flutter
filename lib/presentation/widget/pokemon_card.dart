@@ -43,11 +43,11 @@ class PokemonCard extends StatelessWidget {
 
   String _getPokemonSpriteUrl({required String pokemonUrl}) {
     const baseImageURL =
-        'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/';
+        'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon';
     final pokemonUri = Uri.parse(pokemonUrl);
     final pokemonId =
         pokemonUri.pathSegments[pokemonUri.pathSegments.length - 2];
 
-    return '$baseImageURL$pokemonId.png';
+    return '$baseImageURL/$pokemonId.png';
   }
 }
