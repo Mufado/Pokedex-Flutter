@@ -59,7 +59,7 @@ class PokemonSprites {
 
 @JsonSerializable()
 class PokemonType {
-  Type type;
+  TypeDTO type;
 
   PokemonType({required this.type});
 
@@ -68,11 +68,41 @@ class PokemonType {
 }
 
 @JsonSerializable()
-class Type {
+class TypeResponseDTO {
+  List<TypeDTO> results;
+
+  TypeResponseDTO({required this.results});
+
+  factory TypeResponseDTO.fromJson(Map<String, dynamic> json) =>
+      _$TypeResponseDTOFromJson(json);
+}
+
+@JsonSerializable()
+class TypeDTO {
   String name;
 
-  Type({required this.name});
+  TypeDTO({required this.name});
 
-  factory Type.fromJson(Map<String, dynamic> json) =>
-      _$TypeFromJson(json);
+  factory TypeDTO.fromJson(Map<String, dynamic> json) =>
+      _$TypeDTOFromJson(json);
+}
+
+@JsonSerializable()
+class GenerationResponseDTO {
+  List<GenerationDTO> results;
+
+  GenerationResponseDTO({required this.results});
+
+  factory GenerationResponseDTO.fromJson(Map<String, dynamic> json) =>
+      _$GenerationResponseDTOFromJson(json);
+}
+
+@JsonSerializable()
+class GenerationDTO {
+  String name;
+
+  GenerationDTO({required this.name});
+
+  factory GenerationDTO.fromJson(Map<String, dynamic> json) =>
+      _$GenerationDTOFromJson(json);
 }

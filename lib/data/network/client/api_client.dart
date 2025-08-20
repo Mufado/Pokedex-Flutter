@@ -42,4 +42,34 @@ class ApiClient {
       throw Exception('Could not get pokemon details.');
     }
   }
+
+  Future<TypeResponseDTO> getTypes() async {
+    final response = await _dio.get('https://pokeapi.co/api/v2/type');
+
+    if (response.statusCode != null && response.statusCode! >= 400) {
+      throw NetworkException(
+        statusCode: response.statusCode!,
+        message: response.statusMessage,
+      );
+    } else if (response.statusCode != null) {
+      return TypeResponseDTO.fromJson(response.data as Map<String, dynamic>);
+    } else {
+      throw Exception('Could not get pokemon details.');
+    }
+  }
+
+  Future<GenerationResponseDTO> getGenerations() async {
+    final response = await _dio.get('https://pokeapi.co/api/v2/generation');
+
+    if (response.statusCode != null && response.statusCode! >= 400) {
+      throw NetworkException(
+        statusCode: response.statusCode!,
+        message: response.statusMessage,
+      );
+    } else if (response.statusCode != null) {
+      return GenerationResponseDTO.fromJson(response.data as Map<String, dynamic>);
+    } else {
+      throw Exception('Could not get pokemon details.');
+    }
+  }
 }

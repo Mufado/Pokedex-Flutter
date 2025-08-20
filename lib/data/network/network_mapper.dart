@@ -27,10 +27,32 @@ extension PokemonDTOListToEntities on List<PokemonDTO> {
   List<Pokemon> toEntities() => map((dto) => dto.toEntity()).toList();
 }
 
-extension PokemonDataDtoToEntity on PokemonDataDTO {
-  PokemonData toEntity() => PokemonData(name: name.replaceAll('-', ' '), url: url);
+extension PokemonDataDTOToEntity on PokemonDataDTO {
+  PokemonData toEntity() =>
+      PokemonData(name: name.replaceAll('-', ' '), url: url);
 }
 
-extension PokemonDataDtoListToEntities on List<PokemonDataDTO> {
+extension PokemonDataDTOListToEntities on List<PokemonDataDTO> {
   List<PokemonData> toEntities() => map((dto) => dto.toEntity()).toList();
+}
+
+extension TypeDTOToEntity on TypeDTO {
+  FilterOption toEntity() => FilterOption(name: name);
+}
+
+extension TypeDTOListToEntities on List<TypeDTO> {
+  List<FilterOption> toEntities() => map((dto) => dto.toEntity()).toList();
+}
+
+extension GenerationDTOToEntity on GenerationDTO {
+  FilterOption toEntity() {
+    final generation = name.split('-');
+    return generation.length > 1
+        ? FilterOption(name: generation[generation.length - 1])
+        : FilterOption(name: name);
+  }
+}
+
+extension GenerationDTOListToEntities on List<GenerationDTO> {
+  List<FilterOption> toEntities() => map((dto) => dto.toEntity()).toList();
 }

@@ -53,14 +53,42 @@ Map<String, dynamic> _$PokemonSpritesToJson(PokemonSprites instance) =>
     <String, dynamic>{'front_default': instance.frontDefault};
 
 PokemonType _$PokemonTypeFromJson(Map<String, dynamic> json) =>
-    PokemonType(type: Type.fromJson(json['type'] as Map<String, dynamic>));
+    PokemonType(type: TypeDTO.fromJson(json['type'] as Map<String, dynamic>));
 
 Map<String, dynamic> _$PokemonTypeToJson(PokemonType instance) =>
     <String, dynamic>{'type': instance.type};
 
-Type _$TypeFromJson(Map<String, dynamic> json) =>
-    Type(name: json['name'] as String);
+TypeResponseDTO _$TypeResponseDTOFromJson(Map<String, dynamic> json) =>
+    TypeResponseDTO(
+      results: (json['results'] as List<dynamic>)
+          .map((e) => TypeDTO.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
 
-Map<String, dynamic> _$TypeToJson(Type instance) => <String, dynamic>{
+Map<String, dynamic> _$TypeResponseDTOToJson(TypeResponseDTO instance) =>
+    <String, dynamic>{'results': instance.results};
+
+TypeDTO _$TypeDTOFromJson(Map<String, dynamic> json) =>
+    TypeDTO(name: json['name'] as String);
+
+Map<String, dynamic> _$TypeDTOToJson(TypeDTO instance) => <String, dynamic>{
   'name': instance.name,
 };
+
+GenerationResponseDTO _$GenerationResponseDTOFromJson(
+  Map<String, dynamic> json,
+) => GenerationResponseDTO(
+  results: (json['results'] as List<dynamic>)
+      .map((e) => GenerationDTO.fromJson(e as Map<String, dynamic>))
+      .toList(),
+);
+
+Map<String, dynamic> _$GenerationResponseDTOToJson(
+  GenerationResponseDTO instance,
+) => <String, dynamic>{'results': instance.results};
+
+GenerationDTO _$GenerationDTOFromJson(Map<String, dynamic> json) =>
+    GenerationDTO(name: json['name'] as String);
+
+Map<String, dynamic> _$GenerationDTOToJson(GenerationDTO instance) =>
+    <String, dynamic>{'name': instance.name};

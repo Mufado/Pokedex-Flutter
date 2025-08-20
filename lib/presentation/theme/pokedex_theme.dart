@@ -5,7 +5,7 @@ class PokedexTheme {
   static ThemeData get mixed => ThemeData(
         brightness: Brightness.light,
         useMaterial3: true,
-        textTheme: GoogleFonts.quicksandTextTheme(), // fun roundish font
+        textTheme: GoogleFonts.quicksandTextTheme(),
         colorScheme: ColorScheme(
           brightness: Brightness.light,
           primary: Colors.blue.shade700,
@@ -18,8 +18,6 @@ class PokedexTheme {
           onSurface: Colors.black87,
         ),
         scaffoldBackgroundColor: Colors.blue.shade50,
-
-        // 🌟 AppBar with rounded bottom edges
         appBarTheme: AppBarTheme(
           backgroundColor: Colors.blue.shade700,
           foregroundColor: Colors.yellow.shade600,
@@ -27,7 +25,7 @@ class PokedexTheme {
           centerTitle: true,
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(
-              bottom: Radius.circular(24), // softer bottom corners
+              bottom: Radius.circular(24),
             ),
           ),
           titleTextStyle: GoogleFonts.quicksand(
@@ -36,8 +34,6 @@ class PokedexTheme {
             color: Colors.yellow.shade600,
           ),
         ),
-
-        // 🌟 Inputs
         inputDecorationTheme: InputDecorationTheme(
           filled: true,
           fillColor: Colors.white,
@@ -53,7 +49,6 @@ class PokedexTheme {
           prefixIconColor: Colors.blue.shade400,
         ),
 
-        // 🌟 Cards with gradient + rounder edges
         cardTheme: CardThemeData(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(24),
@@ -63,8 +58,6 @@ class PokedexTheme {
           color: Colors.white,
           shadowColor: Colors.blue.shade200.withValues(alpha: 0.4),
         ),
-
-        // 🌟 Chips
         chipTheme: ChipThemeData(
           backgroundColor: Colors.blue.shade100,
           selectedColor: Colors.yellow.shade700,
@@ -77,8 +70,6 @@ class PokedexTheme {
             borderRadius: BorderRadius.circular(20),
           ),
         ),
-
-        // 🌟 Buttons
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.red.shade500,

@@ -33,3 +33,11 @@ class SearchPokemonResult {
 
   const SearchPokemonResult({required this.pokemonData, this.nextOffset});
 }
+
+class FilterOption {
+  final String name;
+
+  const FilterOption({
+    required this.name,
+  });
+} 

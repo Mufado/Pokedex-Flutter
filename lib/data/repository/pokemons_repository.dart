@@ -75,4 +75,12 @@ class PokemonsRepository {
   Future<Pokemon> getPokemonDetails({required String pokemonUrl}) async {
     return (await apiClient.getPokemonDetails(url: pokemonUrl)).toEntity();
   }
+
+  Future<List<FilterOption>> getTypesFilters() async {
+    return (await apiClient.getTypes()).results.toEntities();
+  }
+
+  Future<List<FilterOption>> getGenerationsFilters() async {
+    return (await apiClient.getGenerations()).results.toEntities();
+  }
 }
