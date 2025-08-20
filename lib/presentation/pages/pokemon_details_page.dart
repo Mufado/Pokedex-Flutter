@@ -148,7 +148,7 @@ class _PokemonDetailsPageState extends State<PokemonDetailsPage> {
   Widget _buildInfoItem(String label, String value, IconData icon) {
     return Column(
       children: [
-        Icon(icon, size: 32),
+        Icon(icon, size: 32, color: Theme.of(context).colorScheme.primary),
         const SizedBox(height: 8),
         Text(label, style: TextStyle(fontSize: 14, color: Colors.grey)),
         const SizedBox(height: 4),
