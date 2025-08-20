@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -17,6 +19,7 @@ class PokemonListPage extends StatefulWidget {
 
 class _PokemonListPageState extends State<PokemonListPage> {
   int? _fetchPageOffset = 0;
+  Timer? _debounce;
   final _searchController = TextEditingController();
   late final PokemonsRepository _pokemonsRepo;
   late final PagingController<int, PokemonData> _pagingController;
@@ -66,8 +69,12 @@ class _PokemonListPageState extends State<PokemonListPage> {
   }
 
   void _onSearchInputChange(String _) {
-    _fetchPageOffset = 0;
-    _pagingController.refresh();
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+
+    _debounce = Timer(const Duration(milliseconds: 400), () {
+      _fetchPageOffset = 0;
+      _pagingController.refresh();
+    });
   }
 
   @override
