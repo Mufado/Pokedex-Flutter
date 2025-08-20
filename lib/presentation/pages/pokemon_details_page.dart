@@ -61,7 +61,7 @@ class _PokemonDetailsPageState extends State<PokemonDetailsPage> {
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: [
-                PokemonSprite(spriteUrl: pokemon.spriteUrl, size: 200),
+                PokemonSprite(spriteUrl: pokemon.spriteUrl ?? '', size: 200),
                 const SizedBox(height: 16),
                 Text(
                   pokemon.name.toUpperCase(),
@@ -98,7 +98,7 @@ class _PokemonDetailsPageState extends State<PokemonDetailsPage> {
                         ),
                         Expanded(
                           child: _buildInfoItem(
-                            'Height',
+                            'Weight',
                             '${(pokemon.weight / 10).toStringAsFixed(1)} kg',
                             Icons.monitor_weight,
                           ),

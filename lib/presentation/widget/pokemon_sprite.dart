@@ -9,15 +9,13 @@ class PokemonSprite extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    try {
-      return CachedNetworkImage(
-        imageUrl: spriteUrl,
-        width: size,
-        height: size,
-        fit: BoxFit.contain,
-      );
-    } catch (e) {
-      return Icon(Icons.image_not_supported, size: 50);
-    }
+    return CachedNetworkImage(
+      imageUrl: spriteUrl,
+      width: size,
+      height: size,
+      fit: BoxFit.contain,
+      errorWidget: (context, url, error) =>
+          Icon(Icons.image_not_supported_outlined, size: 50),
+    );
   }
 }

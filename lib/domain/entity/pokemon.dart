@@ -1,7 +1,7 @@
 class Pokemon {
   final int id;
   final String name;
-  final String spriteUrl;
+  final String? spriteUrl;
   final int height;
   final int weight;
   final List<String> abilities;
@@ -10,7 +10,7 @@ class Pokemon {
   const Pokemon({
     required this.id,
     required this.name,
-    required this.spriteUrl,
+    this.spriteUrl,
     required this.height,
     required this.weight,
     required this.abilities,
@@ -25,4 +25,11 @@ class PokemonData {
   const PokemonData({required this.name, required this.url});
 
   List<Object?> get props => [name, url];
+}
+
+class SearchPokemonResult {
+  final List<PokemonData> pokemonData;
+  final int? nextOffset;
+
+  const SearchPokemonResult({required this.pokemonData, this.nextOffset});
 }

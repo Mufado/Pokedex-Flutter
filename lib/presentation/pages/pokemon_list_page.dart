@@ -6,6 +6,7 @@ import 'package:pokedex_app/data/repository/pokemons_repository.dart';
 import 'package:pokedex_app/domain/entity/pokemon.dart';
 import 'package:pokedex_app/presentation/pages/pokemon_details_page.dart';
 import 'package:pokedex_app/presentation/widget/pokemon_card.dart';
+import 'package:pokedex_app/presentation/widget/search_pokemon_bar.dart';
 
 class PokemonListPage extends StatefulWidget {
   const PokemonListPage({super.key, required});
@@ -15,6 +16,8 @@ class PokemonListPage extends StatefulWidget {
 }
 
 class _PokemonListPageState extends State<PokemonListPage> {
+  int? _fetchPageOffset = 0;
+  final _searchController = TextEditingController();
   late final PokemonsRepository _pokemonsRepo;
   late final PagingController<int, PokemonData> _pagingController;
 
@@ -23,19 +26,28 @@ class _PokemonListPageState extends State<PokemonListPage> {
     super.initState();
     _pokemonsRepo = context.read<PokemonsRepository>();
     _pagingController = PagingController<int, PokemonData>(
-      getNextPageKey: (state) => state.keys == null
-          ? 0
-          : (state.lastPageIsEmpty
-                ? null
-                : (state.keys![state.keys!.length - 1] + 20)),
-      fetchPage: (offset) =>
-          _pokemonsRepo.getAllPokemons(offset: offset, limit: 20),
+      getNextPageKey: (state) {
+        return _fetchPageOffset;
+      },
+      fetchPage: (_) async {
+        final result = await _pokemonsRepo.getAllPokemons(
+          offset: _fetchPageOffset,
+          limit: 20,
+          searchQuery: _searchController.text.trim(),
+        );
+        _fetchPageOffset = result.nextOffset;
+        bool isDuplicatedData =
+            _pagingController.items != null &&
+            result.pokemonData.any(_pagingController.items!.contains);
+        return isDuplicatedData ? <PokemonData>[] : result.pokemonData;
+      },
     );
   }
 
   @override
   void dispose() {
     _pagingController.dispose();
+    _searchController.dispose();
     super.dispose();
   }
 
@@ -53,26 +65,48 @@ class _PokemonListPageState extends State<PokemonListPage> {
     );
   }
 
+  void _onSearchInputChange(String _) {
+    _fetchPageOffset = 0;
+    _pagingController.refresh();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Pokédex')),
-      body: PagingListener(
-        controller: _pagingController,
-        builder: (context, state, fetchNextPage) =>
-            PagedListView<int, PokemonData>(
-              state: state,
-              fetchNextPage: fetchNextPage,
-              builderDelegate: PagedChildBuilderDelegate<PokemonData>(
-                itemBuilder: (context, pokemonData, index) => Container(
-                  padding: EdgeInsets.symmetric(horizontal: 100, vertical: 8),
-                  child: PokemonCard(
-                    pokemonData: pokemonData,
-                    onTap: () => _onTapPokemon(pokemonData),
-                  ),
-                ),
+      body: Container(
+        padding: EdgeInsets.symmetric(horizontal: 50),
+        child: Column(
+          children: [
+            SearchPokemonBar(
+              searchController: _searchController,
+              onChange: _onSearchInputChange,
+            ),
+            Expanded(
+              child: PagingListener(
+                controller: _pagingController,
+                builder: (context, state, fetchNextPage) =>
+                    PagedListView<int, PokemonData>(
+                      state: state,
+                      fetchNextPage: fetchNextPage,
+                      builderDelegate: PagedChildBuilderDelegate<PokemonData>(
+                        itemBuilder: (context, pokemonData, index) => Container(
+                          padding: EdgeInsets.all(8),
+                          child: PokemonCard(
+                            pokemonData: pokemonData,
+                            onTap: () => _onTapPokemon(pokemonData),
+                          ),
+                        ),
+                        firstPageErrorIndicatorBuilder: (context) =>
+                            Icon(Icons.error),
+                        newPageErrorIndicatorBuilder: (context) =>
+                            Icon(Icons.error_outline),
+                      ),
+                    ),
               ),
             ),
+          ],
+        ),
       ),
     );
   }

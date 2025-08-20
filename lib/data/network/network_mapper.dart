@@ -8,7 +8,7 @@ extension PokemonDtoToEntity on PokemonDTO {
     try {
       return Pokemon(
         id: id,
-        name: name,
+        name: name.replaceAll('-', ' '),
         spriteUrl: sprites.frontDefault,
         height: height,
         weight: weight,
@@ -28,7 +28,7 @@ extension PokemonDTOListToEntities on List<PokemonDTO> {
 }
 
 extension PokemonDataDtoToEntity on PokemonDataDTO {
-  PokemonData toEntity() => PokemonData(name: name, url: url);
+  PokemonData toEntity() => PokemonData(name: name.replaceAll('-', ' '), url: url);
 }
 
 extension PokemonDataDtoListToEntities on List<PokemonDataDTO> {
