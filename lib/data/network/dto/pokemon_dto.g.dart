@@ -6,16 +6,38 @@ part of 'pokemon_dto.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+NamedAPIResourceListDTO _$NamedAPIResourceListDTOFromJson(
+  Map<String, dynamic> json,
+) => NamedAPIResourceListDTO(
+  results: (json['results'] as List<dynamic>)
+      .map((e) => NamedAPIResourceDTO.fromJson(e as Map<String, dynamic>))
+      .toList(),
+);
+
+Map<String, dynamic> _$NamedAPIResourceListDTOToJson(
+  NamedAPIResourceListDTO instance,
+) => <String, dynamic>{'results': instance.results};
+
+NamedAPIResourceDTO _$NamedAPIResourceDTOFromJson(Map<String, dynamic> json) =>
+    NamedAPIResourceDTO(
+      name: json['name'] as String?,
+      url: json['url'] as String?,
+    );
+
+Map<String, dynamic> _$NamedAPIResourceDTOToJson(
+  NamedAPIResourceDTO instance,
+) => <String, dynamic>{'name': instance.name, 'url': instance.url};
+
 PokemonDTO _$PokemonDTOFromJson(Map<String, dynamic> json) => PokemonDTO(
   abilities: (json['abilities'] as List<dynamic>)
-      .map((e) => PokemonAbility.fromJson(e as Map<String, dynamic>))
+      .map((e) => PokemonAbilityDTO.fromJson(e as Map<String, dynamic>))
       .toList(),
   height: (json['height'] as num).toInt(),
   id: (json['id'] as num).toInt(),
-  name: json['name'] as String,
-  sprites: PokemonSprites.fromJson(json['sprites'] as Map<String, dynamic>),
+  name: json['name'] as String?,
+  sprites: PokemonSpritesDTO.fromJson(json['sprites'] as Map<String, dynamic>),
   types: (json['types'] as List<dynamic>)
-      .map((e) => PokemonType.fromJson(e as Map<String, dynamic>))
+      .map((e) => PokemonTypeDTO.fromJson(e as Map<String, dynamic>))
       .toList(),
   weight: (json['weight'] as num).toInt(),
 );
@@ -31,64 +53,68 @@ Map<String, dynamic> _$PokemonDTOToJson(PokemonDTO instance) =>
       'weight': instance.weight,
     };
 
-PokemonAbility _$PokemonAbilityFromJson(Map<String, dynamic> json) =>
-    PokemonAbility(
-      ability: Ability.fromJson(json['ability'] as Map<String, dynamic>),
+PokemonAbilityDTO _$PokemonAbilityDTOFromJson(Map<String, dynamic> json) =>
+    PokemonAbilityDTO(
+      ability: NamedAPIResourceDTO.fromJson(
+        json['ability'] as Map<String, dynamic>,
+      ),
     );
 
-Map<String, dynamic> _$PokemonAbilityToJson(PokemonAbility instance) =>
+Map<String, dynamic> _$PokemonAbilityDTOToJson(PokemonAbilityDTO instance) =>
     <String, dynamic>{'ability': instance.ability};
 
-Ability _$AbilityFromJson(Map<String, dynamic> json) =>
-    Ability(name: json['name'] as String);
+AbilityDTO _$AbilityDTOFromJson(Map<String, dynamic> json) =>
+    AbilityDTO(name: json['name'] as String?);
 
-Map<String, dynamic> _$AbilityToJson(Ability instance) => <String, dynamic>{
-  'name': instance.name,
-};
+Map<String, dynamic> _$AbilityDTOToJson(AbilityDTO instance) =>
+    <String, dynamic>{'name': instance.name};
 
-PokemonSprites _$PokemonSpritesFromJson(Map<String, dynamic> json) =>
-    PokemonSprites(frontDefault: json['front_default'] as String?);
+PokemonSpritesDTO _$PokemonSpritesDTOFromJson(Map<String, dynamic> json) =>
+    PokemonSpritesDTO(frontDefault: json['front_default'] as String?);
 
-Map<String, dynamic> _$PokemonSpritesToJson(PokemonSprites instance) =>
+Map<String, dynamic> _$PokemonSpritesDTOToJson(PokemonSpritesDTO instance) =>
     <String, dynamic>{'front_default': instance.frontDefault};
 
-PokemonType _$PokemonTypeFromJson(Map<String, dynamic> json) =>
-    PokemonType(type: TypeDTO.fromJson(json['type'] as Map<String, dynamic>));
-
-Map<String, dynamic> _$PokemonTypeToJson(PokemonType instance) =>
-    <String, dynamic>{'type': instance.type};
-
-TypeResponseDTO _$TypeResponseDTOFromJson(Map<String, dynamic> json) =>
-    TypeResponseDTO(
-      results: (json['results'] as List<dynamic>)
-          .map((e) => TypeDTO.fromJson(e as Map<String, dynamic>))
-          .toList(),
+PokemonTypeDTO _$PokemonTypeDTOFromJson(Map<String, dynamic> json) =>
+    PokemonTypeDTO(
+      type: NamedAPIResourceDTO.fromJson(json['type'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$TypeResponseDTOToJson(TypeResponseDTO instance) =>
-    <String, dynamic>{'results': instance.results};
+Map<String, dynamic> _$PokemonTypeDTOToJson(PokemonTypeDTO instance) =>
+    <String, dynamic>{'type': instance.type};
 
-TypeDTO _$TypeDTOFromJson(Map<String, dynamic> json) =>
-    TypeDTO(name: json['name'] as String);
-
-Map<String, dynamic> _$TypeDTOToJson(TypeDTO instance) => <String, dynamic>{
-  'name': instance.name,
-};
-
-GenerationResponseDTO _$GenerationResponseDTOFromJson(
-  Map<String, dynamic> json,
-) => GenerationResponseDTO(
-  results: (json['results'] as List<dynamic>)
-      .map((e) => GenerationDTO.fromJson(e as Map<String, dynamic>))
+TypeDTO _$TypeDTOFromJson(Map<String, dynamic> json) => TypeDTO(
+  name: json['name'] as String?,
+  pokemons: (json['pokemon'] as List<dynamic>)
+      .map((e) => TypePokemonDTO.fromJson(e as Map<String, dynamic>))
       .toList(),
 );
 
-Map<String, dynamic> _$GenerationResponseDTOToJson(
-  GenerationResponseDTO instance,
-) => <String, dynamic>{'results': instance.results};
+Map<String, dynamic> _$TypeDTOToJson(TypeDTO instance) => <String, dynamic>{
+  'name': instance.name,
+  'pokemon': instance.pokemons,
+};
+
+TypePokemonDTO _$TypePokemonDTOFromJson(Map<String, dynamic> json) =>
+    TypePokemonDTO(
+      pokemon: NamedAPIResourceDTO.fromJson(
+        json['pokemon'] as Map<String, dynamic>,
+      ),
+    );
+
+Map<String, dynamic> _$TypePokemonDTOToJson(TypePokemonDTO instance) =>
+    <String, dynamic>{'pokemon': instance.pokemon};
 
 GenerationDTO _$GenerationDTOFromJson(Map<String, dynamic> json) =>
-    GenerationDTO(name: json['name'] as String);
+    GenerationDTO(
+      name: json['name'] as String?,
+      pokemons: (json['pokemon_species'] as List<dynamic>)
+          .map((e) => NamedAPIResourceDTO.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
 
 Map<String, dynamic> _$GenerationDTOToJson(GenerationDTO instance) =>
-    <String, dynamic>{'name': instance.name};
+    <String, dynamic>{
+      'name': instance.name,
+      'pokemon_species': instance.pokemons,
+    };

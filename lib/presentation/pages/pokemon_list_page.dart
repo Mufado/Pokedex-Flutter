@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:pokedex_app/application/filter_cubit.dart';
 import 'package:pokedex_app/application/pokemon_details_cubit.dart';
 import 'package:pokedex_app/data/repository/pokemons_repository.dart';
 import 'package:pokedex_app/domain/entity/pokemon.dart';
@@ -22,27 +23,47 @@ class _PokemonListPageState extends State<PokemonListPage> {
   Timer? _debounce;
   final _searchController = TextEditingController();
   late final PokemonsRepository _pokemonsRepo;
-  late final PagingController<int, PokemonData> _pagingController;
+  late final PagingController<int, NamedAPIResource> _pagingController;
+  late final FilterCubit _filtersCubit;
 
   @override
   void initState() {
     super.initState();
     _pokemonsRepo = context.read<PokemonsRepository>();
-    _pagingController = PagingController<int, PokemonData>(
+    _filtersCubit = context.read<FilterCubit>();
+    _filtersCubit.loadFilterOptions();
+
+    _pagingController = PagingController<int, NamedAPIResource>(
       getNextPageKey: (state) {
         return _fetchPageOffset;
       },
       fetchPage: (_) async {
-        final result = await _pokemonsRepo.getAllPokemons(
+        var typesFilters = <String>[];
+        var generationsFilters = <String>[];
+
+        if (_filtersCubit.state is FilterLoaded) {
+          final currentState = _filtersCubit.state as FilterLoaded;
+          typesFilters = currentState.enabledTypes;
+          generationsFilters = currentState.enabledGenerations;
+        }
+        
+        final result = await _pokemonsRepo.getPokemons(
           offset: _fetchPageOffset,
           limit: 20,
           searchQuery: _searchController.text.trim(),
+          types: typesFilters,
+          generations: generationsFilters
         );
+
         _fetchPageOffset = result.nextOffset;
+
         bool isDuplicatedData =
             _pagingController.items != null &&
-            result.pokemonData.any(_pagingController.items!.contains);
-        return isDuplicatedData ? <PokemonData>[] : result.pokemonData;
+            result.pokemonResources.any(_pagingController.items!.contains);
+
+        return isDuplicatedData
+            ? <NamedAPIResource>[]
+            : result.pokemonResources;
       },
     );
   }
@@ -54,7 +75,7 @@ class _PokemonListPageState extends State<PokemonListPage> {
     super.dispose();
   }
 
-  void _onTapPokemon(PokemonData pokemonData) {
+  void _onTapPokemon(NamedAPIResource pokemonData) {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -68,7 +89,7 @@ class _PokemonListPageState extends State<PokemonListPage> {
     );
   }
 
-  void _onSearchInputChange(String _) {
+  void _onSearchChange() {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
 
     _debounce = Timer(const Duration(milliseconds: 400), () {
@@ -87,28 +108,30 @@ class _PokemonListPageState extends State<PokemonListPage> {
           children: [
             SearchPokemonBar(
               searchController: _searchController,
-              onChange: _onSearchInputChange,
+              onChange: _onSearchChange,
             ),
             Expanded(
               child: PagingListener(
                 controller: _pagingController,
                 builder: (context, state, fetchNextPage) =>
-                    PagedListView<int, PokemonData>(
+                    PagedListView<int, NamedAPIResource>(
                       state: state,
                       fetchNextPage: fetchNextPage,
-                      builderDelegate: PagedChildBuilderDelegate<PokemonData>(
-                        itemBuilder: (context, pokemonData, index) => Container(
-                          padding: EdgeInsets.all(8),
-                          child: PokemonCard(
-                            pokemonData: pokemonData,
-                            onTap: () => _onTapPokemon(pokemonData),
+                      builderDelegate:
+                          PagedChildBuilderDelegate<NamedAPIResource>(
+                            itemBuilder: (context, pokemonData, index) =>
+                                Container(
+                                  padding: EdgeInsets.all(8),
+                                  child: PokemonCard(
+                                    pokemonData: pokemonData,
+                                    onTap: () => _onTapPokemon(pokemonData),
+                                  ),
+                                ),
+                            firstPageErrorIndicatorBuilder: (context) =>
+                                Icon(Icons.error),
+                            newPageErrorIndicatorBuilder: (context) =>
+                                Icon(Icons.error_outline),
                           ),
-                        ),
-                        firstPageErrorIndicatorBuilder: (context) =>
-                            Icon(Icons.error),
-                        newPageErrorIndicatorBuilder: (context) =>
-                            Icon(Icons.error_outline),
-                      ),
                     ),
               ),
             ),

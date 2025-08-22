@@ -5,7 +5,7 @@ import 'package:pokedex_app/presentation/widget/pokemon_sprite.dart';
 class PokemonCard extends StatelessWidget {
   static const _size = 100.0;
 
-  final PokemonData pokemonData;
+  final NamedAPIResource pokemonData;
   final VoidCallback onTap;
 
   const PokemonCard({

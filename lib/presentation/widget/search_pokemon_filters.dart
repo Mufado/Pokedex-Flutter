@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pokedex_app/application/search_filters_cubit.dart';
+import 'package:pokedex_app/application/filter_cubit.dart';
 import 'package:pokedex_app/domain/entity/pokemon.dart';
 
 class SearchPokemonFilters extends StatefulWidget {
-  const SearchPokemonFilters({super.key});
+  final void Function()? onChange;
+
+  const SearchPokemonFilters({super.key, this.onChange});
 
   @override
   State<SearchPokemonFilters> createState() => _SearchPokemonFiltersState();
@@ -17,7 +19,6 @@ class _SearchPokemonFiltersState extends State<SearchPokemonFilters> {
   void initState() {
     super.initState();
     _cubit = context.read<FilterCubit>();
-    _cubit.loadFilterOptions();
   }
 
   @override
@@ -36,11 +37,25 @@ class _SearchPokemonFiltersState extends State<SearchPokemonFilters> {
               children: [
                 Text('Types'),
                 const SizedBox(height: 8),
-                _getFilterChips(state.types),
+                _getFilterChips(
+                  allFilters: state.types,
+                  enabledFilters: state.enabledTypes,
+                  (filter) {
+                    _cubit.triggerFilter(type: filter);
+                  },
+                  () => _cubit.triggerFilter(type: 'ALL'),
+                ),
                 const SizedBox(height: 16),
                 Text('Generations'),
                 const SizedBox(height: 8),
-                _getFilterChips(state.generations),
+                _getFilterChips(
+                  allFilters: state.generations,
+                  enabledFilters: state.enabledGenerations,
+                  (filter) {
+                    _cubit.triggerFilter(generation: filter);
+                  },
+                  () => _cubit.triggerFilter(generation: 'ALL'),
+                ),
               ],
             );
           }
@@ -50,16 +65,40 @@ class _SearchPokemonFiltersState extends State<SearchPokemonFilters> {
     );
   }
 
-  Wrap _getFilterChips(List<FilterOption> values) {
+  Wrap _getFilterChips(
+    void Function(String? filter) triggerFilterCallback,
+    void Function() triggerFilterAllCallback, {
+    required List<FilterOption> allFilters,
+    required List<String> enabledFilters,
+  }) {
     return Wrap(
       spacing: 8,
       runSpacing: 8,
       alignment: WrapAlignment.center,
       children: [
-        ...values.map(
-          (type) => FilterChip(
-            label: Text(type.name.toUpperCase()),
-            onSelected: (value) {},
+        FilterChip(
+          label: Text('ALL'),
+          selected: enabledFilters.isEmpty,
+          onSelected: (value) {
+            if (!value) {
+              return;
+            }
+            triggerFilterCallback("ALL");
+            widget.onChange!();
+          },
+          backgroundColor: Colors.red.shade300,
+          selectedColor: Colors.red.shade600,
+        ),
+        ...allFilters.map(
+          (filter) => FilterChip(
+            label: Text(filter.name.toUpperCase()),
+            selected: enabledFilters.contains(filter.apiName),
+            onSelected: (value) {
+              if (widget.onChange != null) {
+                triggerFilterCallback(filter.apiName);
+                widget.onChange!();
+              }
+            },
           ),
         ),
       ],

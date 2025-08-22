@@ -3,20 +3,52 @@ import 'package:json_annotation/json_annotation.dart';
 part 'pokemon_dto.g.dart';
 
 @JsonSerializable()
+class NamedAPIResourceListDTO {
+  final List<NamedAPIResourceDTO> results;
+
+  const NamedAPIResourceListDTO({required this.results});
+
+  factory NamedAPIResourceListDTO.fromJson(Map<String, dynamic> json) =>
+      _$NamedAPIResourceListDTOFromJson(json);
+}
+
+@JsonSerializable()
+class NamedAPIResourceDTO {
+  final String? name;
+  final String? url;
+
+  const NamedAPIResourceDTO({this.name, this.url});
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is NamedAPIResourceDTO &&
+            other.name == name &&
+            other.runtimeType == runtimeType;
+  }
+
+  @override
+  int get hashCode => name.hashCode;
+
+  factory NamedAPIResourceDTO.fromJson(Map<String, dynamic> json) =>
+      _$NamedAPIResourceDTOFromJson(json);
+}
+
+@JsonSerializable()
 class PokemonDTO {
-  int id;
-  List<PokemonAbility> abilities;
-  int height;
-  String name;
-  PokemonSprites sprites;
-  List<PokemonType> types;
-  int weight;
+  final int id;
+  final List<PokemonAbilityDTO> abilities;
+  final int height;
+  final String? name;
+  final PokemonSpritesDTO sprites;
+  final List<PokemonTypeDTO> types;
+  final int weight;
 
   PokemonDTO({
     required this.abilities,
     required this.height,
     required this.id,
-    required this.name,
+    this.name,
     required this.sprites,
     required this.types,
     required this.weight,
@@ -27,81 +59,75 @@ class PokemonDTO {
 }
 
 @JsonSerializable()
-class PokemonAbility {
-  Ability ability;
+class PokemonAbilityDTO {
+  final NamedAPIResourceDTO ability;
 
-  PokemonAbility({required this.ability});
+  PokemonAbilityDTO({required this.ability});
 
-  factory PokemonAbility.fromJson(Map<String, dynamic> json) =>
-      _$PokemonAbilityFromJson(json);
+  factory PokemonAbilityDTO.fromJson(Map<String, dynamic> json) =>
+      _$PokemonAbilityDTOFromJson(json);
 }
 
 @JsonSerializable()
-class Ability {
-  String name;
+class AbilityDTO {
+  final String? name;
 
-  Ability({required this.name});
+  AbilityDTO({required this.name});
 
-  factory Ability.fromJson(Map<String, dynamic> json) =>
-      _$AbilityFromJson(json);
+  factory AbilityDTO.fromJson(Map<String, dynamic> json) =>
+      _$AbilityDTOFromJson(json);
 }
 
 @JsonSerializable()
-class PokemonSprites {
+class PokemonSpritesDTO {
   @JsonKey(name: 'front_default')
-  String? frontDefault;
+  final String? frontDefault;
 
-  PokemonSprites({required this.frontDefault});
+  PokemonSpritesDTO({this.frontDefault});
 
-  factory PokemonSprites.fromJson(Map<String, dynamic> json) =>
-      _$PokemonSpritesFromJson(json);
+  factory PokemonSpritesDTO.fromJson(Map<String, dynamic> json) =>
+      _$PokemonSpritesDTOFromJson(json);
 }
 
 @JsonSerializable()
-class PokemonType {
-  TypeDTO type;
+class PokemonTypeDTO {
+  final NamedAPIResourceDTO type;
 
-  PokemonType({required this.type});
+  PokemonTypeDTO({required this.type});
 
-  factory PokemonType.fromJson(Map<String, dynamic> json) =>
-      _$PokemonTypeFromJson(json);
-}
-
-@JsonSerializable()
-class TypeResponseDTO {
-  List<TypeDTO> results;
-
-  TypeResponseDTO({required this.results});
-
-  factory TypeResponseDTO.fromJson(Map<String, dynamic> json) =>
-      _$TypeResponseDTOFromJson(json);
+  factory PokemonTypeDTO.fromJson(Map<String, dynamic> json) =>
+      _$PokemonTypeDTOFromJson(json);
 }
 
 @JsonSerializable()
 class TypeDTO {
-  String name;
+  final String? name;
+  @JsonKey(name: 'pokemon')
+  final List<TypePokemonDTO> pokemons;
 
-  TypeDTO({required this.name});
+  TypeDTO({this.name, required this.pokemons});
 
   factory TypeDTO.fromJson(Map<String, dynamic> json) =>
       _$TypeDTOFromJson(json);
 }
 
 @JsonSerializable()
-class GenerationResponseDTO {
-  List<GenerationDTO> results;
+class TypePokemonDTO {
+  final NamedAPIResourceDTO pokemon;
 
-  GenerationResponseDTO({required this.results});
+  TypePokemonDTO({required this.pokemon});
 
-  factory GenerationResponseDTO.fromJson(Map<String, dynamic> json) =>
-      _$GenerationResponseDTOFromJson(json);
+  factory TypePokemonDTO.fromJson(Map<String, dynamic> json) =>
+      _$TypePokemonDTOFromJson(json);
 }
 
 @JsonSerializable()
 class GenerationDTO {
-  String name;
+  final String? name;
+  @JsonKey(name: 'pokemon_species')
+  final List<NamedAPIResourceDTO> pokemons;
 
-  GenerationDTO({required this.name});
+  GenerationDTO({this.name, required this.pokemons});
 
   factory GenerationDTO.fromJson(Map<String, dynamic> json) =>
       _$GenerationDTOFromJson(json);

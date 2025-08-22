@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:pokedex_app/presentation/widget/search_pokemon_filters.dart';
 
 class SearchPokemonBar extends StatefulWidget {
-  final ValueChanged<String> onChange;
+  final void Function() onChange;
   final TextEditingController searchController;
-  
+
   const SearchPokemonBar({
     super.key,
     required this.onChange,
@@ -45,7 +45,7 @@ class _SearchPokemonBarState extends State<SearchPokemonBar> {
           ),
           child: TextField(
             controller: widget.searchController,
-            onChanged: widget.onChange,
+            onChanged: (_) => widget.onChange(),
             decoration: InputDecoration(
               hintText: 'Search Pokémon...',
               prefixIcon: const Icon(Icons.search, color: Colors.grey),
@@ -57,7 +57,7 @@ class _SearchPokemonBarState extends State<SearchPokemonBar> {
                       icon: const Icon(Icons.clear, color: Colors.grey),
                       onPressed: () {
                         widget.searchController.clear();
-                        widget.onChange('');
+                        widget.onChange();
                       },
                     ),
                   Text('|', style: TextStyle(color: Colors.grey)),
@@ -86,7 +86,7 @@ class _SearchPokemonBarState extends State<SearchPokemonBar> {
           duration: const Duration(milliseconds: 300),
 
           child: _showFilters
-              ? const SearchPokemonFilters()
+              ? SearchPokemonFilters(onChange: widget.onChange)
               : const SizedBox.shrink(),
         ),
       ],

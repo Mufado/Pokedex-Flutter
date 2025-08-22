@@ -18,26 +18,36 @@ class Pokemon {
   });
 }
 
-class PokemonData {
+class NamedAPIResource {
   final String name;
   final String url;
 
-  const PokemonData({required this.name, required this.url});
+  const NamedAPIResource({required this.name, required this.url});
 
   List<Object?> get props => [name, url];
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is NamedAPIResource &&
+            other.name == name &&
+            other.runtimeType == runtimeType;
+  }
+
+  @override
+  int get hashCode => name.hashCode;
 }
 
 class SearchPokemonResult {
-  final List<PokemonData> pokemonData;
+  final List<NamedAPIResource> pokemonResources;
   final int? nextOffset;
 
-  const SearchPokemonResult({required this.pokemonData, this.nextOffset});
+  const SearchPokemonResult({required this.pokemonResources, this.nextOffset});
 }
 
 class FilterOption {
   final String name;
+  final String? apiName;
 
-  const FilterOption({
-    required this.name,
-  });
-} 
+  const FilterOption({required this.name, this.apiName});
+}

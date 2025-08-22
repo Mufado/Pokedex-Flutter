@@ -3,19 +3,40 @@ import 'package:pokedex_app/data/network/dto/pokemon_dto.dart';
 import 'package:pokedex_app/domain/exception/mapper_exeception.dart';
 import 'package:pokedex_app/domain/entity/pokemon.dart';
 
-extension PokemonDtoToEntity on PokemonDTO {
+extension NamedAPIResourceDTOToEntity on NamedAPIResourceDTO {
+  NamedAPIResource toEntity() =>
+      NamedAPIResource(name: name ?? '', url: url ?? '');
+}
+
+extension NamedAPIResourceDTOListToEntity on Iterable<NamedAPIResourceDTO> {
+  List<NamedAPIResource> toEntities() => map((dto) => dto.toEntity()).toList();
+
+  List<FilterOption> toTypesFilterOptions() {
+    return map((dto) => FilterOption(name: dto.name ?? '', apiName: dto.name)).toList();
+  }
+
+  List<FilterOption> toGenerationFilterOptions() {
+    return map(
+      (dto) => FilterOption(
+        name: 'GEN ${dto.name?.split('-')[1] ?? List<String>.empty()}', apiName: dto.name
+      ),
+    ).toList();
+  }
+}
+
+extension PokemonDTOToEntity on PokemonDTO {
   Pokemon toEntity() {
     try {
       return Pokemon(
         id: id,
-        name: name.replaceAll('-', ' '),
+        name: name?.replaceAll('-', ' ') ?? '',
         spriteUrl: sprites.frontDefault,
         height: height,
         weight: weight,
         abilities: abilities
-            .map((abilities) => abilities.ability.name)
+            .map((abilities) => abilities.ability.name ?? '')
             .toList(),
-        types: types.map((types) => types.type.name).toList(),
+        types: types.map((types) => types.type.name ?? '').toList(),
       );
     } catch (e) {
       throw MapperExeception<PokemonDTO, Pokemon>(e.toString());
@@ -28,31 +49,15 @@ extension PokemonDTOListToEntities on List<PokemonDTO> {
 }
 
 extension PokemonDataDTOToEntity on PokemonDataDTO {
-  PokemonData toEntity() =>
-      PokemonData(name: name.replaceAll('-', ' '), url: url);
+  NamedAPIResource toEntity() =>
+      NamedAPIResource(name: name.replaceAll('-', ' '), url: url);
 }
 
 extension PokemonDataDTOListToEntities on List<PokemonDataDTO> {
-  List<PokemonData> toEntities() => map((dto) => dto.toEntity()).toList();
+  List<NamedAPIResource> toEntities() => map((dto) => dto.toEntity()).toList();
 }
 
-extension TypeDTOToEntity on TypeDTO {
-  FilterOption toEntity() => FilterOption(name: name);
-}
-
-extension TypeDTOListToEntities on List<TypeDTO> {
-  List<FilterOption> toEntities() => map((dto) => dto.toEntity()).toList();
-}
-
-extension GenerationDTOToEntity on GenerationDTO {
-  FilterOption toEntity() {
-    final generation = name.split('-');
-    return generation.length > 1
-        ? FilterOption(name: generation[generation.length - 1])
-        : FilterOption(name: name);
-  }
-}
-
-extension GenerationDTOListToEntities on List<GenerationDTO> {
-  List<FilterOption> toEntities() => map((dto) => dto.toEntity()).toList();
+extension TypePokemonDTOListToEntity on Iterable<TypePokemonDTO> {
+  List<NamedAPIResource> toResourcesEntities() =>
+      map((dto) => dto.pokemon.toEntity()).toList();
 }

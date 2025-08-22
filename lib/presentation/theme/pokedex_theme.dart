@@ -56,7 +56,7 @@ class PokedexTheme {
           elevation: 6,
           margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
           color: Colors.white,
-          shadowColor: Colors.blue.shade200.withValues(alpha: 0.4),
+          shadowColor: Colors.red.shade500.withValues(alpha: 0.4),
         ),
         chipTheme: ChipThemeData(
           backgroundColor: Colors.blue.shade100,

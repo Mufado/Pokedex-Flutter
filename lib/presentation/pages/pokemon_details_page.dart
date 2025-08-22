@@ -6,7 +6,7 @@ import 'package:pokedex_app/presentation/widget/pokemon_sprite.dart';
 import 'package:pokedex_app/presentation/widget/type_tags.dart';
 
 class PokemonDetailsPage extends StatefulWidget {
-  final PokemonData pokemonData;
+  final NamedAPIResource pokemonData;
 
   const PokemonDetailsPage({super.key, required this.pokemonData});
 
@@ -62,15 +62,7 @@ class _PokemonDetailsPageState extends State<PokemonDetailsPage> {
               mainAxisSize: MainAxisSize.max,
               children: [
                 PokemonSprite(spriteUrl: pokemon.spriteUrl ?? '', size: 200),
-                const SizedBox(height: 16),
-                Text(
-                  pokemon.name.toUpperCase(),
-                  style: const TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 4),
                 Text(
                   '#${pokemon.id.toString().padLeft(4, '0')}',
                   style: const TextStyle(fontSize: 18, color: Colors.grey),

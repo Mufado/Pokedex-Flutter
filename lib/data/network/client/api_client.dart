@@ -10,7 +10,7 @@ class ApiClient {
     _dio = Dio()..options.baseUrl = baseUrl;
   }
 
-  Future<AllPokemons> getAllPokemons({int? offset, int? limit}) async {
+  Future<AllPokemons> getPokemons({int? offset, int? limit}) async {
     final response = await _dio.get(
       'pokemon',
       queryParameters: {'offset': offset, 'limit': limit},
@@ -43,7 +43,7 @@ class ApiClient {
     }
   }
 
-  Future<TypeResponseDTO> getTypes() async {
+  Future<NamedAPIResourceListDTO> getTypes() async {
     final response = await _dio.get('https://pokeapi.co/api/v2/type');
 
     if (response.statusCode != null && response.statusCode! >= 400) {
@@ -52,13 +52,13 @@ class ApiClient {
         message: response.statusMessage,
       );
     } else if (response.statusCode != null) {
-      return TypeResponseDTO.fromJson(response.data as Map<String, dynamic>);
+      return NamedAPIResourceListDTO.fromJson(response.data as Map<String, dynamic>);
     } else {
       throw Exception('Could not get pokemon details.');
     }
   }
 
-  Future<GenerationResponseDTO> getGenerations() async {
+  Future<NamedAPIResourceListDTO> getGenerations() async {
     final response = await _dio.get('https://pokeapi.co/api/v2/generation');
 
     if (response.statusCode != null && response.statusCode! >= 400) {
@@ -67,7 +67,37 @@ class ApiClient {
         message: response.statusMessage,
       );
     } else if (response.statusCode != null) {
-      return GenerationResponseDTO.fromJson(response.data as Map<String, dynamic>);
+      return NamedAPIResourceListDTO.fromJson(response.data as Map<String, dynamic>);
+    } else {
+      throw Exception('Could not get pokemon details.');
+    }
+  }
+
+  Future<TypeDTO> getType(String typeName) async {
+    final response = await _dio.get('https://pokeapi.co/api/v2/type/$typeName');
+
+    if (response.statusCode != null && response.statusCode! >= 400) {
+      throw NetworkException(
+        statusCode: response.statusCode!,
+        message: response.statusMessage,
+      );
+    } else if (response.statusCode != null) {
+      return TypeDTO.fromJson(response.data as Map<String, dynamic>);
+    } else {
+      throw Exception('Could not get pokemon details.');
+    }
+  }
+
+  Future<GenerationDTO> getGeneration(String generationName) async {
+    final response = await _dio.get('https://pokeapi.co/api/v2/generation/$generationName');
+
+    if (response.statusCode != null && response.statusCode! >= 400) {
+      throw NetworkException(
+        statusCode: response.statusCode!,
+        message: response.statusMessage,
+      );
+    } else if (response.statusCode != null) {
+      return GenerationDTO.fromJson(response.data as Map<String, dynamic>);
     } else {
       throw Exception('Could not get pokemon details.');
     }

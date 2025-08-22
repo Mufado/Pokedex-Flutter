@@ -7,57 +7,114 @@ class PokemonsRepository {
 
   PokemonsRepository({required this.apiClient});
 
-  Future<SearchPokemonResult> getAllPokemons({
+  Future<SearchPokemonResult> getPokemons({
     int? offset,
     int? limit,
     String? searchQuery,
+    List<String>? types,
+    List<String>? generations,
   }) async {
+    offset ??= 0;
     limit ??= 20;
 
-    var results = (await apiClient.getAllPokemons(
-      offset: offset,
-      limit: limit,
-    )).results.toEntities();
+    final hasNameFilter = (searchQuery?.isNotEmpty ?? false);
+    final hasTypesFilter = (types?.isNotEmpty ?? false);
+    final hasGenerationFilter = (generations?.isNotEmpty ?? false);
 
-    int? newOffset = offset == null ? limit : offset + limit;
-
-    if (searchQuery == null || searchQuery.isEmpty) {
+    if (!hasNameFilter && !hasTypesFilter && !hasGenerationFilter) {
       return SearchPokemonResult(
-        pokemonData: results,
-        nextOffset: results.length < limit ? null : newOffset,
+        pokemonResources: (await apiClient.getPokemons(
+          offset: offset,
+          limit: limit,
+        )).results.toEntities(),
+        nextOffset: offset + limit,
       );
     }
 
-    final returnList = <PokemonData>[];
+    if (!hasTypesFilter && !hasGenerationFilter) {
+      return await _getPokemonsByName(
+        name: searchQuery!,
+        offset: offset,
+        limit: limit,
+      );
+    }
 
-    returnList.addAll(
-      results.where(
-        (result) =>
-            result.name.toLowerCase().contains(searchQuery.toLowerCase()),
-      ),
+    var filteredByTypes = hasTypesFilter
+        ? (await _getPokemonsByFilter(
+            filterNames: types!,
+            getResourcesCallback: (int filterIndex) async {
+              return (await apiClient.getType(
+                types[filterIndex],
+              )).pokemons.toResourcesEntities();
+            },
+          )).toSet()
+        : <NamedAPIResource>{};
+
+    var filteredByGenerations = hasGenerationFilter
+        ? (await _getPokemonsByFilter(
+            filterNames: generations!,
+            name: searchQuery,
+            getResourcesCallback: (int filterIndex) async {
+              return (await apiClient.getGeneration(
+                generations[filterIndex],
+              )).pokemons.toEntities();
+            },
+          )).toSet()
+        : <NamedAPIResource>{};
+
+    final Set<NamedAPIResource> filteredList;
+
+    if (hasTypesFilter && hasGenerationFilter) {
+      filteredList = hasGenerationFilter
+          ? filteredByTypes.intersection(filteredByGenerations)
+          : filteredByTypes;
+    } else if (hasTypesFilter) {
+      filteredList = filteredByTypes;
+    } else {
+      filteredList = filteredByGenerations;
+    }
+
+    if (hasNameFilter) {
+      filteredList.removeWhere(
+        (resource) =>
+            !resource.name.toLowerCase().contains(searchQuery!.toLowerCase()),
+      );
+    }
+
+    return SearchPokemonResult(
+      pokemonResources: filteredList.toList(),
+      nextOffset: null,
     );
+  }
 
-    // Since an endpoint that allow searching does not exists, the following code will keep
-    // sending requests to fetch the pokemons by the search query
+  Future<SearchPokemonResult> _getPokemonsByName({
+    required String name,
+    required int offset,
+    required int limit,
+  }) async {
+    int? nextOffset = offset;
+    final returnList = <NamedAPIResource>[];
+
     while (returnList.length < limit) {
-      results = (await apiClient.getAllPokemons(
-        offset: newOffset,
+      final results = (await apiClient.getPokemons(
+        offset: nextOffset,
         limit: limit,
       )).results.toEntities();
 
       returnList.addAll(
         results.where(
-          (result) =>
-              result.name.toLowerCase().contains(searchQuery.toLowerCase()),
+          (result) => result.name.toLowerCase().contains(name.toLowerCase()),
         ),
       );
 
-      if (results.length < limit) {
-        newOffset = null;
+      bool reachedLastPage = results.length < limit;
+
+      if (reachedLastPage) {
+        nextOffset = null;
         break;
       }
 
-      newOffset = newOffset! + limit;
+      nextOffset = nextOffset! + limit;
     }
 
     if (returnList.length > limit) {
@@ -69,7 +126,37 @@ class PokemonsRepository {
       );
     }
 
-    return SearchPokemonResult(pokemonData: returnList, nextOffset: newOffset);
+    return SearchPokemonResult(
+      pokemonResources: returnList,
+      nextOffset: nextOffset,
+    );
+  }
+
+  Future<List<NamedAPIResource>> _getPokemonsByFilter({
+    required List<String> filterNames,
+    required Future<List<NamedAPIResource>> Function(int filterIndex)
+    getResourcesCallback,
+    String? name,
+  }) async {
+    var pokemonsResources = <NamedAPIResource>{};
+
+    if (filterNames.isEmpty) {
+      return pokemonsResources.toList();
+    }
+
+    pokemonsResources = (await getResourcesCallback(0)).toSet();
+
+    if (filterNames.length == 1) {
+      return pokemonsResources.toList();
+    }
+
+    for (var i = 1; i < filterNames.length; i++) {
+      final result = (await getResourcesCallback(i)).toSet();
+
+      pokemonsResources.addAll(result);
+    }
+
+    return pokemonsResources.toList();
   }
 
   Future<Pokemon> getPokemonDetails({required String pokemonUrl}) async {
@@ -77,10 +164,11 @@ class PokemonsRepository {
   }
 
   Future<List<FilterOption>> getTypesFilters() async {
-    return (await apiClient.getTypes()).results.toEntities();
+    return (await apiClient.getTypes()).results.toTypesFilterOptions();
   }
 
   Future<List<FilterOption>> getGenerationsFilters() async {
-    return (await apiClient.getGenerations()).results.toEntities();
+    return (await apiClient.getGenerations()).results
+        .toGenerationFilterOptions();
   }
 }
