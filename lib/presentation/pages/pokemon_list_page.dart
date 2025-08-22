@@ -46,13 +46,13 @@ class _PokemonListPageState extends State<PokemonListPage> {
           typesFilters = currentState.enabledTypes;
           generationsFilters = currentState.enabledGenerations;
         }
-        
+
         final result = await _pokemonsRepo.getPokemons(
           offset: _fetchPageOffset,
           limit: 20,
           searchQuery: _searchController.text.trim(),
           types: typesFilters,
-          generations: generationsFilters
+          generations: generationsFilters,
         );
 
         _fetchPageOffset = result.nextOffset;
@@ -127,10 +127,23 @@ class _PokemonListPageState extends State<PokemonListPage> {
                                     onTap: () => _onTapPokemon(pokemonData),
                                   ),
                                 ),
-                            firstPageErrorIndicatorBuilder: (context) =>
-                                Icon(Icons.error),
-                            newPageErrorIndicatorBuilder: (context) =>
-                                Icon(Icons.error_outline),
+                            firstPageErrorIndicatorBuilder: (context) => Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Error: ${_pagingController.error}',
+                                    style: TextTheme.of(context).headlineSmall,
+                                  ),
+                                  const SizedBox(height: 20),
+                                  ElevatedButton(
+                                    onPressed: () =>
+                                        _pagingController.refresh(),
+                                    child: Text('Retry'),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
                     ),
               ),
