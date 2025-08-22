@@ -53,18 +53,7 @@ lib/
 
 ## 🔧 Getting Started
 
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd pokedex_app
-   ```
-
-2. **Install dependencies**
-   ```bash
-   flutter pub get
-   ```
-
-3. **Run the application**
-   ```bash
-   flutter run
-   ```
+### Testing through Firebase App Tester
+1. Get to know how to download applications with Firebase via invites from developers: [Get set up as a tester](https://firebase.google.com/docs/app-distribution/get-set-up-as-a-tester?platform=android)
+2. Get the App Testes (if doesn't have it yet) and use this [invite link](https://appdistribution.firebase.google.com/testerapps/1:438322881837:android:2720ffd36c94cd40f65fa4/releases/5lobf6p2ea878?utm_source=firebase-console)
+3. Download and install the application.
