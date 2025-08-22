@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:pokedex_app/data/network/dto/all_pokemons_dto.dart';
 import 'package:pokedex_app/data/network/dto/pokemon_dto.dart';
 import 'package:pokedex_app/domain/exception/network_exception.dart';
 
@@ -10,7 +9,7 @@ class ApiClient {
     _dio = Dio()..options.baseUrl = baseUrl;
   }
 
-  Future<AllPokemons> getPokemons({int? offset, int? limit}) async {
+  Future<NamedAPIResourceListDTO> getPokemons({int? offset, int? limit}) async {
     final response = await _dio.get(
       'pokemon',
       queryParameters: {'offset': offset, 'limit': limit},
@@ -22,7 +21,7 @@ class ApiClient {
         message: response.statusMessage,
       );
     } else if (response.statusCode != null) {
-      return AllPokemons.fromJson(response.data as Map<String, dynamic>);
+      return NamedAPIResourceListDTO.fromJson(response.data as Map<String, dynamic>);
     } else {
       throw Exception('Could not get pokemon list.');
     }

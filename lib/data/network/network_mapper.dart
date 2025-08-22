@@ -1,4 +1,3 @@
-import 'package:pokedex_app/data/network/dto/all_pokemons_dto.dart';
 import 'package:pokedex_app/data/network/dto/pokemon_dto.dart';
 import 'package:pokedex_app/domain/exception/mapper_exeception.dart';
 import 'package:pokedex_app/domain/entity/pokemon.dart';
@@ -46,15 +45,6 @@ extension PokemonDTOToEntity on PokemonDTO {
 
 extension PokemonDTOListToEntities on List<PokemonDTO> {
   List<Pokemon> toEntities() => map((dto) => dto.toEntity()).toList();
-}
-
-extension PokemonDataDTOToEntity on PokemonDataDTO {
-  NamedAPIResource toEntity() =>
-      NamedAPIResource(name: name.replaceAll('-', ' '), url: url);
-}
-
-extension PokemonDataDTOListToEntities on List<PokemonDataDTO> {
-  List<NamedAPIResource> toEntities() => map((dto) => dto.toEntity()).toList();
 }
 
 extension TypePokemonDTOListToEntity on Iterable<TypePokemonDTO> {
