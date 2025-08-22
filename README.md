@@ -1,16 +1,70 @@
-# pokedex_app
+# Pokédex App
 
-A new Flutter project.
+A Flutter application that provides a comprehensive Pokédex experience using the PokeAPI. This app demonstrates clean architecture principles with a focus on maintainability, testability, and user experience.
 
-## Getting Started
+## 🏗️ Architecture
 
-This project is a starting point for a Flutter application.
+This project follows **Clean Architecture** principles with a clear separation of concerns across multiple layers:
 
-A few resources to get you started if this is your first Flutter project:
+### 📁 Project Structure
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+```
+lib/
+├── application/          # Application layer (Business Logic)
+├── data/                 # Data layer (External interfaces)
+│   ├── network/          # API communication
+│   │   ├── client/
+│   │   ├── dto/          # Data Transfer Objects
+│   └── repository/       # Repository pattern implementation
+├── domain/               # Domain layer (Core business entities)
+│   ├── entity/
+│   └── exception/
+├── presentation/         # Presentation layer (UI)
+│   ├── pages/
+│   ├── theme/            # Theme and color palette
+│   └── widget/
+└── main.dart            
+```
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## 📦 Dependencies & Their Purpose
+
+### **Core Dependencies**
+
+#### **flutter_bloc**
+- State management solution
+
+#### **dio** 
+- Modern HTTP client for handling API communication with PokeAPI
+
+#### **json_annotation** + **json_serializable**
+  - Helps managing converting JSON data, reducing boilerplate and maintaining type safety
+
+#### **cached_network_image**
+- Easy to use, offering a good performance boost
+
+#### **infinite_scroll_pagination**
+- Easier way to handle infinite scroll with pagination
+
+#### **google_fonts**
+- To receive the font used in the whole application
+
+#### **flutter_lints**
+- Code quality and style enforcement
+
+## 🔧 Getting Started
+
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd pokedex_app
+   ```
+
+2. **Install dependencies**
+   ```bash
+   flutter pub get
+   ```
+
+3. **Run the application**
+   ```bash
+   flutter run
+   ```
