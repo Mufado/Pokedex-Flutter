@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "438322881837",
+    "project_id": "pokedex-app-flutter",
+    "storage_bucket": "pokedex-app-flutter.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:438322881837:android:2720ffd36c94cd40f65fa4",
+        "android_client_info": {
+          "package_name": "com.mufado.pokedex_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdAeP_c5eA1d0fXZKZGo0vc0C8sl4C4kU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
