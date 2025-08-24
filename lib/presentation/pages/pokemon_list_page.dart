@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:pokedex_app/application/filter_cubit.dart';
 import 'package:pokedex_app/application/pokemon_details_cubit.dart';
-import 'package:pokedex_app/data/repository/pokemons_repository.dart';
+import 'package:pokedex_app/domain/abstraction/base_pokemons_repository.dart';
 import 'package:pokedex_app/domain/entity/pokemon.dart';
 import 'package:pokedex_app/presentation/pages/pokemon_details_page.dart';
 import 'package:pokedex_app/presentation/widget/pokemon_card.dart';
@@ -22,14 +22,14 @@ class _PokemonListPageState extends State<PokemonListPage> {
   int? _fetchPageOffset = 0;
   Timer? _debounce;
   final _searchController = TextEditingController();
-  late final PokemonsRepository _pokemonsRepo;
+  late final BasePokemonsRepository _pokemonsRepo;
   late final PagingController<int, NamedAPIResource> _pagingController;
   late final FilterCubit _filtersCubit;
 
   @override
   void initState() {
     super.initState();
-    _pokemonsRepo = context.read<PokemonsRepository>();
+    _pokemonsRepo = context.read<BasePokemonsRepository>();
     _filtersCubit = context.read<FilterCubit>();
     _filtersCubit.loadFilterOptions();
 
@@ -81,9 +81,9 @@ class _PokemonListPageState extends State<PokemonListPage> {
       MaterialPageRoute(
         builder: (_) => BlocProvider(
           create: (_) => PokemonDetailsCubit(
-            repository: context.read<PokemonsRepository>(),
+            repository: context.read<BasePokemonsRepository>(),
           ),
-          child: PokemonDetailsPage(pokemonData: pokemonData),
+          child: PokemonDetailsPage(pokemonResource: pokemonData),
         ),
       ),
     );

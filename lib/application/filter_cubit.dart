@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pokedex_app/data/repository/pokemons_repository.dart';
+import 'package:pokedex_app/domain/abstraction/base_pokemons_repository.dart';
 import 'package:pokedex_app/domain/entity/pokemon.dart';
 
 abstract class FilterState {
@@ -31,9 +31,9 @@ class FilterError extends FilterState {
 }
 
 class FilterCubit extends Cubit<FilterState> {
-  final PokemonsRepository _repository;
+  final BasePokemonsRepository _repository;
 
-  FilterCubit({required PokemonsRepository repository})
+  FilterCubit({required BasePokemonsRepository repository})
     : _repository = repository,
       super(FilterInitial());
 

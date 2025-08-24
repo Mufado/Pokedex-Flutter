@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pokedex_app/data/repository/pokemons_repository.dart';
+import 'package:pokedex_app/domain/abstraction/base_pokemons_repository.dart';
 import 'package:pokedex_app/domain/entity/pokemon.dart';
 
 abstract class PokemonDetailsState {
@@ -24,17 +24,17 @@ class PokemonDetailsError extends PokemonDetailsState {
 
 // Cubit
 class PokemonDetailsCubit extends Cubit<PokemonDetailsState> {
-  final PokemonsRepository _repository;
+  final BasePokemonsRepository _repository;
 
-  PokemonDetailsCubit({required PokemonsRepository repository})
+  PokemonDetailsCubit({required BasePokemonsRepository repository})
     : _repository = repository,
       super(PokemonDetailsInitial());
 
-  Future<void> loadPokemonDetail(String nameOrId) async {
+  Future<void> loadPokemonDetail(String pokemonUrl) async {
     try {
       emit(PokemonDetailsLoading());
 
-      final pokemon = await _repository.getPokemonDetails(pokemonUrl: nameOrId);
+      final pokemon = await _repository.getPokemonDetails(pokemonUrl: pokemonUrl);
 
       emit(PokemonDetailsLoaded(pokemon));
     } catch (e) {

@@ -5,19 +5,31 @@ import 'package:pokedex_app/domain/entity/pokemon.dart';
 extension NamedAPIResourceDTOToEntity on NamedAPIResourceDTO {
   NamedAPIResource toEntity() =>
       NamedAPIResource(name: name ?? '', url: url ?? '');
+
+  NamedAPIResource toConvertedUrlEntity() => NamedAPIResource(
+    name: name ?? '',
+    url: url?.replaceFirst('/pokemon-species/', '/pokemon/') ?? '',
+  );
 }
 
 extension NamedAPIResourceDTOListToEntity on Iterable<NamedAPIResourceDTO> {
-  List<NamedAPIResource> toEntities() => map((dto) => dto.toEntity()).toList();
+  List<NamedAPIResource> toEntities({bool convertToPokemonUrl = false}) => map(
+    convertToPokemonUrl
+        ? (dto) => dto.toConvertedUrlEntity()
+        : (dto) => dto.toEntity(),
+  ).toList();
 
   List<FilterOption> toTypesFilterOptions() {
-    return map((dto) => FilterOption(name: dto.name ?? '', apiName: dto.name)).toList();
+    return map(
+      (dto) => FilterOption(name: dto.name ?? '', apiName: dto.name),
+    ).toList();
   }
 
   List<FilterOption> toGenerationFilterOptions() {
     return map(
       (dto) => FilterOption(
-        name: 'GEN ${dto.name?.split('-')[1] ?? List<String>.empty()}', apiName: dto.name
+        name: 'GEN ${dto.name?.split('-')[1] ?? List<String>.empty()}',
+        apiName: dto.name,
       ),
     ).toList();
   }

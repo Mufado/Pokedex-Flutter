@@ -1,12 +1,14 @@
 import 'package:pokedex_app/data/network/client/api_client.dart';
+import 'package:pokedex_app/domain/abstraction/base_pokemons_repository.dart';
 import 'package:pokedex_app/domain/entity/pokemon.dart';
 import 'package:pokedex_app/data/network/network_mapper.dart';
 
-class PokemonsRepository {
+class PokemonsRepository implements BasePokemonsRepository {
   final ApiClient apiClient;
 
   PokemonsRepository({required this.apiClient});
 
+  @override
   Future<SearchPokemonResult> getPokemons({
     int? offset,
     int? limit,
@@ -57,7 +59,7 @@ class PokemonsRepository {
             getResourcesCallback: (int filterIndex) async {
               return (await apiClient.getGeneration(
                 generations[filterIndex],
-              )).pokemons.toEntities();
+              )).pokemons.toEntities(convertToPokemonUrl: true);
             },
           )).toSet()
         : <NamedAPIResource>{};
@@ -85,6 +87,22 @@ class PokemonsRepository {
       pokemonResources: filteredList.toList(),
       nextOffset: null,
     );
+  }
+
+  @override
+  Future<Pokemon> getPokemonDetails({required String pokemonUrl}) async {
+    return (await apiClient.getPokemonDetails(url: pokemonUrl)).toEntity();
+  }
+
+  @override
+  Future<List<FilterOption>> getTypesFilters() async {
+    return (await apiClient.getTypes()).results.toTypesFilterOptions();
+  }
+
+  @override
+  Future<List<FilterOption>> getGenerationsFilters() async {
+    return (await apiClient.getGenerations()).results
+        .toGenerationFilterOptions();
   }
 
   Future<SearchPokemonResult> _getPokemonsByName({
@@ -157,18 +175,5 @@ class PokemonsRepository {
     }
 
     return pokemonsResources.toList();
-  }
-
-  Future<Pokemon> getPokemonDetails({required String pokemonUrl}) async {
-    return (await apiClient.getPokemonDetails(url: pokemonUrl)).toEntity();
-  }
-
-  Future<List<FilterOption>> getTypesFilters() async {
-    return (await apiClient.getTypes()).results.toTypesFilterOptions();
-  }
-
-  Future<List<FilterOption>> getGenerationsFilters() async {
-    return (await apiClient.getGenerations()).results
-        .toGenerationFilterOptions();
   }
 }

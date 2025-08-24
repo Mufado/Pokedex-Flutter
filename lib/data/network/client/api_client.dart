@@ -43,7 +43,7 @@ class ApiClient {
   }
 
   Future<NamedAPIResourceListDTO> getTypes() async {
-    final response = await _dio.get('https://pokeapi.co/api/v2/type');
+    final response = await _dio.get('type');
 
     if (response.statusCode != null && response.statusCode! >= 400) {
       throw NetworkException(
@@ -58,7 +58,7 @@ class ApiClient {
   }
 
   Future<NamedAPIResourceListDTO> getGenerations() async {
-    final response = await _dio.get('https://pokeapi.co/api/v2/generation');
+    final response = await _dio.get('generation');
 
     if (response.statusCode != null && response.statusCode! >= 400) {
       throw NetworkException(
@@ -73,7 +73,7 @@ class ApiClient {
   }
 
   Future<TypeDTO> getType(String typeName) async {
-    final response = await _dio.get('https://pokeapi.co/api/v2/type/$typeName');
+    final response = await _dio.get('type/$typeName');
 
     if (response.statusCode != null && response.statusCode! >= 400) {
       throw NetworkException(
@@ -88,7 +88,7 @@ class ApiClient {
   }
 
   Future<GenerationDTO> getGeneration(String generationName) async {
-    final response = await _dio.get('https://pokeapi.co/api/v2/generation/$generationName');
+    final response = await _dio.get('generation/$generationName');
 
     if (response.statusCode != null && response.statusCode! >= 400) {
       throw NetworkException(

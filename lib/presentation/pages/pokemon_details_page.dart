@@ -6,9 +6,9 @@ import 'package:pokedex_app/presentation/widget/pokemon_sprite.dart';
 import 'package:pokedex_app/presentation/widget/type_tags.dart';
 
 class PokemonDetailsPage extends StatefulWidget {
-  final NamedAPIResource pokemonData;
+  final NamedAPIResource pokemonResource;
 
-  const PokemonDetailsPage({super.key, required this.pokemonData});
+  const PokemonDetailsPage({super.key, required this.pokemonResource});
 
   @override
   State<PokemonDetailsPage> createState() => _PokemonDetailsPageState();
@@ -21,7 +21,7 @@ class _PokemonDetailsPageState extends State<PokemonDetailsPage> {
   void initState() {
     super.initState();
     _cubit = context.read<PokemonDetailsCubit>();
-    _cubit.loadPokemonDetail(widget.pokemonData.url);
+    _cubit.loadPokemonDetail(widget.pokemonResource.url);
   }
 
   @override
@@ -29,7 +29,7 @@ class _PokemonDetailsPageState extends State<PokemonDetailsPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          widget.pokemonData.name.toUpperCase(),
+          widget.pokemonResource.name.toUpperCase(),
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
