@@ -55,5 +55,5 @@ lib/
 
 ### Testing through Firebase App Tester
 1. Get to know how to download applications with Firebase via invites from developers: [Get set up as a tester](https://firebase.google.com/docs/app-distribution/get-set-up-as-a-tester?platform=android)
-2. Get the App Testes (if doesn't have it yet) and use this [invite link](https://appdistribution.firebase.dev/i/5e25933f1e90f12d)
+2. Get the App Tester (if doesn't have it yet) and use this [invite link](https://appdistribution.firebase.dev/i/5e25933f1e90f12d)
 3. Download and install the application.
