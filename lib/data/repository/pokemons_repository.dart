@@ -1,10 +1,10 @@
-import 'package:pokedex_app/data/network/client/api_client.dart';
+import 'package:pokedex_app/data/network/abstraction/base_pokemon_data_source.dart';
 import 'package:pokedex_app/domain/abstraction/base_pokemons_repository.dart';
 import 'package:pokedex_app/domain/entity/pokemon.dart';
 import 'package:pokedex_app/data/network/network_mapper.dart';
 
 class PokemonsRepository implements BasePokemonsRepository {
-  final ApiClient apiClient;
+  final BasePokemonsDataSource apiClient;
 
   PokemonsRepository({required this.apiClient});
 

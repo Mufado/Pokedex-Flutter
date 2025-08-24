@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pokedex_app/application/pokemon_details_cubit.dart';
 import 'package:pokedex_app/application/filter_cubit.dart';
-import 'package:pokedex_app/data/network/client/api_client.dart';
+import 'package:pokedex_app/data/network/abstraction/base_pokemon_data_source.dart';
+import 'package:pokedex_app/data/network/client/poke_api_client.dart';
 import 'package:pokedex_app/data/repository/pokemons_repository.dart';
 import 'package:pokedex_app/domain/abstraction/base_pokemons_repository.dart';
 import 'package:pokedex_app/presentation/pages/pokemon_list_page.dart';
@@ -17,7 +18,7 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final apiClient = ApiClient(baseUrl: 'https://pokeapi.co/api/v2/');
+    final apiClient = PokeApiClient(baseUrl: 'https://pokeapi.co/api/v2/') as BasePokemonsDataSource;
     final repository = PokemonsRepository(apiClient: apiClient) as BasePokemonsRepository;
 
     return MaterialApp(
