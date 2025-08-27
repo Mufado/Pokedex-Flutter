@@ -82,9 +82,8 @@ class _SearchPokemonBarState extends State<SearchPokemonBar> {
             ),
           ),
         ),
-        AnimatedSwitcher(
+        AnimatedSize(
           duration: const Duration(milliseconds: 300),
-
           child: _showFilters
               ? SearchPokemonFilters(onChange: widget.onChange)
               : const SizedBox.shrink(),

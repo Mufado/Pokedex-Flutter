@@ -23,44 +23,49 @@ class _SearchPokemonFiltersState extends State<SearchPokemonFilters> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(8.0),
-      decoration: BoxDecoration(
-        color: ColorScheme.of(context).onPrimaryContainer,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: BlocBuilder(
-        bloc: _cubit,
-        builder: (context, state) {
-          if (state is FilterLoaded) {
-            return Column(
-              children: [
-                Text('Types'),
-                const SizedBox(height: 8),
-                _getFilterChips(
-                  allFilters: state.types,
-                  enabledFilters: state.enabledTypes,
-                  (filter) {
-                    _cubit.triggerFilter(type: filter);
-                  },
-                  () => _cubit.triggerFilter(type: 'ALL'),
-                ),
-                const SizedBox(height: 16),
-                Text('Generations'),
-                const SizedBox(height: 8),
-                _getFilterChips(
-                  allFilters: state.generations,
-                  enabledFilters: state.enabledGenerations,
-                  (filter) {
-                    _cubit.triggerFilter(generation: filter);
-                  },
-                  () => _cubit.triggerFilter(generation: 'ALL'),
-                ),
-              ],
-            );
-          }
-          return const Center(child: CircularProgressIndicator());
-        },
+    return ConstrainedBox(
+      constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.6),
+      child: SingleChildScrollView(
+        child: Container(
+          padding: const EdgeInsets.all(8.0),
+          decoration: BoxDecoration(
+            color: ColorScheme.of(context).onPrimaryContainer,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: BlocBuilder(
+            bloc: _cubit,
+            builder: (context, state) {
+              if (state is FilterLoaded) {
+                return Column(
+                  children: [
+                    Text('Types'),
+                    const SizedBox(height: 8),
+                    _getFilterChips(
+                      allFilters: state.types,
+                      enabledFilters: state.enabledTypes,
+                      (filter) {
+                        _cubit.triggerFilter(type: filter);
+                      },
+                      () => _cubit.triggerFilter(type: 'ALL'),
+                    ),
+                    const SizedBox(height: 16),
+                    Text('Generations'),
+                    const SizedBox(height: 8),
+                    _getFilterChips(
+                      allFilters: state.generations,
+                      enabledFilters: state.enabledGenerations,
+                      (filter) {
+                        _cubit.triggerFilter(generation: filter);
+                      },
+                      () => _cubit.triggerFilter(generation: 'ALL'),
+                    ),
+                  ],
+                );
+              }
+              return const Center(child: CircularProgressIndicator());
+            },
+          ),
+        ),
       ),
     );
   }
